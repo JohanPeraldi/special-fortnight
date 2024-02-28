@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import TheHeader from '../components/TheHeader.vue'
 
 // Data properties common to all product types
 let commonData = reactive({ sku: '', name: '', price: 0 })
@@ -35,8 +36,18 @@ const submitForm = () => {
 </script>
 
 <template>
+  <TheHeader>
+    <template #heading>
+      Add Product
+    </template>
+    <template #buttons>
+      <div class="buttons">
+        <button class="btn save">Save</button>
+        <button class="btn cancel"><RouterLink to="/">Cancel</RouterLink></button>
+      </div>
+    </template>
+  </TheHeader>
   <div class="add-product">
-    <h1>This is the add product page</h1>
     <form id="product_form" @submit.prevent="submitForm">
       <fieldset class="input-group no-border">
         <label for="sku">SKU</label>
@@ -89,17 +100,13 @@ const submitForm = () => {
       </fieldset>
 
       <!-- For testing only -->
-      <button type="submit">Submit</button>
+      <button type="submit" class="btn save m-top">Submit</button>
     </form>
   </div>
 </template>
 
 <style>
-@media (min-width: 1024px) {
-  .add-product {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
+.m-top {
+  margin-top: 1.6rem;
 }
 </style>

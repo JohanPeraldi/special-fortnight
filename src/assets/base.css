@@ -27,7 +27,8 @@
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
 
-  --color-border: var(--vt-c-divider-light-2);
+  /* --color-border: var(--vt-c-divider-light-2); */
+  --color-border: #b0b6bd;
   --color-border-hover: var(--vt-c-divider-light-1);
 
   --color-heading: var(--vt-c-text-light-1);
@@ -58,6 +59,10 @@
   font-weight: normal;
 }
 
+html {
+  font-size: 10px;
+}
+
 body {
   min-height: 100vh;
   color: var(--color-text);
@@ -79,7 +84,7 @@ body {
     'Droid Sans',
     'Helvetica Neue',
     sans-serif;
-  font-size: 15px;
+  font-size: 1.6rem;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
