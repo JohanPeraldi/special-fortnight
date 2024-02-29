@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import TheHeader from '../components/TheHeader.vue'
+import TheButton from '@/components/TheButton.vue'
+import TheHeader from '@/components/TheHeader.vue'
 
 // Data properties common to all product types
 let commonData = reactive({ sku: '', name: '', price: 0 })
@@ -23,15 +24,29 @@ let productData = computed(() => {
     case 'furniture':
       return { ...commonData, ...furnitureData }
     default:
-      return commonData
+      return { message: 'Please select a product type!'}
   }
 })
 
-// Define your submitForm method
+const resetForm = () => {
+  commonData.sku = ''
+  commonData.name = ''
+  commonData.price = 0
+  dvdData.size = 0
+  bookData.weight = 0
+  furnitureData.dimensions.height = 0
+  furnitureData.dimensions.width = 0
+  furnitureData.dimensions.length = 0
+}
+
 const submitForm = () => {
-  // Here you can handle the form submission.
-  // For example, you can send the form data to a server.
-  console.log('Product data:', productData.value)
+  // Handle the form submission
+  if (!selectedType.value) {
+    console.error(productData.value.message)
+  } else {
+    console.log('Product data:', productData.value)
+  }
+  resetForm()
 }
 </script>
 
@@ -42,8 +57,8 @@ const submitForm = () => {
     </template>
     <template #buttons>
       <div class="buttons">
-        <button class="btn save">Save</button>
-        <button class="btn cancel"><RouterLink to="/">Cancel</RouterLink></button>
+        <TheButton type="save" @btn-click="submitForm">Save</TheButton>
+        <TheButton type="cancel" @click="$router.push('/')">Cancel</TheButton>
       </div>
     </template>
   </TheHeader>
@@ -98,9 +113,6 @@ const submitForm = () => {
           <input type="number" id="length" name="length" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.length" />
         </div>
       </fieldset>
-
-      <!-- For testing only -->
-      <button type="submit" class="btn save m-top">Submit</button>
     </form>
   </div>
 </template>
@@ -153,10 +165,5 @@ label {
 
 .no-border {
   border: none;
-}
-
-// For testing only
-.m-top {
-  margin-top: 1.6rem;
 }
 </style>

@@ -7,50 +7,8 @@
   font-weight: normal;
 }
 
-.btn {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 1.6rem;
-  transition: 0.4s;
-  padding: 0.5rem 1rem;
-}
-
 .buttons {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.cancel,
-.delete {
-  border-left: 1px solid var(--color-border);
-}
-
-.cancel a,
-.delete {
-  color: rgb(209, 62, 9);
-}
-
-.add a,
-.cancel a {
-  text-decoration: none;
-}
-
-.add a,
-.save {
-  color: hsla(160, 100%, 37%, 1);
-}
-
-
-@media (hover: hover) {
-  .add:hover,
-  .save:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-
-  .cancel:hover,
-  .delete:hover {
-    background-color: hsla(25, 100%, 33%, 0.2);
-  }
 }
