@@ -105,7 +105,57 @@ const submitForm = () => {
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+input {
+  &[type='text'],
+  &[type='number'] {
+    width: 100%;
+  }
+}
+
+label {
+  margin-right: 10px;
+  min-width: 100px;
+}
+
+.column {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.input-group {
+  display: flex;
+  margin-bottom: 10px;
+  padding: 10px;
+  min-width: 375px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .inner {
+    padding: 0;
+
+    &:nth-of-type(2) {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+}
+
+.no-border {
+  border: none;
+}
+
+// For testing only
 .m-top {
   margin-top: 1.6rem;
 }
