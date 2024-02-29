@@ -27,24 +27,24 @@ const props = defineProps({
 
 .add,
 .save {
-  color: hsla(160, 100%, 37%, 1);
+  color: var(--color-text-highlight);
 }
 
 .cancel,
 .delete {
-  color: rgb(209, 62, 9);
+  color: var(--color-text-warning);
   border-left: 1px solid var(--color-border);
 }
 
 @media (hover: hover) {
   .add:hover,
   .save:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    background-color: var(--color-background-highlight);
   }
 
   .cancel:hover,
   .delete:hover {
-    background-color: hsla(25, 100%, 33%, 0.2);
+    background-color: var(--color-background-warning);
   }
 }
 </style>
