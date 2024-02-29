@@ -1,7 +1,11 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import TheButton from '@/components/TheButton.vue'
 import TheHeader from '@/components/TheHeader.vue'
+
+// A warning message is displayed if the form
+// is submitted without selecting a product type
+const warningMessage = ref('')
 
 // Data properties common to all product types
 let commonData = reactive({ sku: '', name: '', price: 0 })
@@ -13,6 +17,11 @@ let furnitureData = reactive({ dimensions: { height: 0, width: 0, length: 0 } })
 
 // The selected product type (dvd, book or furniture)
 let selectedType = ref('')
+
+// A watcher that removes the warning message when a product type is selected
+watch(selectedType, () => {
+  warningMessage.value = ''
+})
 
 // A computed property that returns the selected product type data
 let productData = computed(() => {
@@ -42,7 +51,7 @@ const resetForm = () => {
 const submitForm = () => {
   // Handle the form submission
   if (!selectedType.value) {
-    console.error(productData.value.message)
+    warningMessage.value = productData.value.message
   } else {
     console.log('Product data:', productData.value)
   }
@@ -114,6 +123,7 @@ const submitForm = () => {
         </div>
       </fieldset>
     </form>
+    <p class="warning">{{ warningMessage }}</p>
   </div>
 </template>
 
@@ -165,5 +175,10 @@ label {
 
 .no-border {
   border: none;
+}
+
+.warning {
+  color: var(--color-text-warning);
+  margin: 1rem;
 }
 </style>
