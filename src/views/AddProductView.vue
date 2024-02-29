@@ -7,6 +7,9 @@ import TheHeader from '@/components/TheHeader.vue'
 // is submitted without selecting a product type
 const warningMessage = ref('')
 
+// Track whether the Save button has been clicked
+const formSubmitted = ref(false)
+
 // Data properties common to all product types
 let commonData = reactive({ sku: '', name: '', price: 0 })
 
@@ -46,15 +49,36 @@ const resetForm = () => {
   furnitureData.dimensions.height = 0
   furnitureData.dimensions.width = 0
   furnitureData.dimensions.length = 0
+
+  // Reset necessary to remove warning styles on input fields after form submission
+  resetWarning()
+}
+
+const resetWarning = () => {
+  warningMessage.value = ''
+  formSubmitted.value = false
 }
 
 const submitForm = () => {
-  // Handle the form submission
+  formSubmitted.value = true
+
+  // Check if all fields have been filled out
+  const allFieldsFilled = Object.values(productData.value).every(field => field !== '')
+
+  if (!allFieldsFilled) {
+    warningMessage.value = 'Please fill out all fields!'
+
+    return
+  }
+
+  // Check if a product type has been selected
   if (!selectedType.value) {
     warningMessage.value = productData.value.message
-  } else {
-    console.log('Product data:', productData.value)
+
+    return
   }
+
+  console.log('Product data:', productData.value)
   resetForm()
 }
 </script>
@@ -75,15 +99,15 @@ const submitForm = () => {
     <form id="product_form" @submit.prevent="submitForm">
       <fieldset class="input-group no-border">
         <label for="sku">SKU</label>
-        <input type="text" id="sku" name="sku" autocomplete="off" v-model="commonData.sku" />
+        <input type="text" id="sku" name="sku" autocomplete="off" v-model="commonData.sku" :class="{ 'input-warning': formSubmitted && !commonData.sku }" @focus="resetWarning" />
       </fieldset>
       <fieldset class="input-group no-border">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" autocomplete="off" v-model="commonData.name" />
+        <input type="text" id="name" name="name" autocomplete="off" v-model="commonData.name" :class="{ 'input-warning': formSubmitted && !commonData.name }" @focus="resetWarning" />
       </fieldset>
       <fieldset class="input-group no-border">
         <label for="price">Price ($)</label>
-        <input type="number" id="price" name="price" min="0" value="0" step="0.01" autocomplete="off" v-model="commonData.price" />
+        <input type="number" id="price" name="price" min="0" value="0" step="0.01" autocomplete="off" v-model="commonData.price" :class="{ 'input-warning': formSubmitted && !commonData.price }" @focus="resetWarning" />
       </fieldset>
       <fieldset class="input-group no-border">
         <label for="productType">Type Switcher</label>
@@ -98,28 +122,28 @@ const submitForm = () => {
       <fieldset class="input-group" id="dvd" v-if="selectedType === 'dvd'">
         <legend>Please provide size in MB</legend>
         <label for="size">Size (MB)</label>
-        <input type="number" id="size" name="size" min="0" value="0" step="0.01" autocomplete="off" v-model="dvdData.size" />
+        <input type="number" id="size" name="size" min="0" value="0" step="0.01" autocomplete="off" v-model="dvdData.size" :class="{ 'input-warning': formSubmitted && !dvdData.size }" @focus="resetWarning" />
       </fieldset>
       <!-- The input below shows if option Book is selected -->
       <fieldset class="input-group" id="book" v-if="selectedType === 'book'">
         <legend>Please provide weight in Kgs</legend>
         <label for="weight">Weight (KG)</label>
-        <input type="number" id="weight" name="weight" min="0" value="0" step="0.001" autocomplete="off" v-model="bookData.weight" />
+        <input type="number" id="weight" name="weight" min="0" value="0" step="0.001" autocomplete="off" v-model="bookData.weight" :class="{ 'input-warning': formSubmitted && !bookData.weight }" @focus="resetWarning" />
       </fieldset>
       <!-- The inputs below show if option Furniture is selected -->
       <fieldset class="input-group column" id="furniture" v-if="selectedType === 'furniture'">
         <legend>Please provide dimensions in HxWxL format</legend>
         <div class="input-group inner">
           <label for="height">Height (CM)</label>
-          <input type="number" id="height" name="height" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.height" />
+          <input type="number" id="height" name="height" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.height" :class="{ 'input-warning': formSubmitted && !furnitureData.dimensions.height }" @focus="resetWarning" />
         </div>
         <div class="input-group inner">
           <label for="width">Width (CM)</label>
-          <input type="number" id="width" name="width" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.width" />
+          <input type="number" id="width" name="width" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.width" :class="{ 'input-warning': formSubmitted && !furnitureData.dimensions.width }" @focus="resetWarning" />
         </div>
         <div class="input-group inner">
           <label for="length">Length (CM)</label>
-          <input type="number" id="length" name="length" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.length" />
+          <input type="number" id="length" name="length" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.length" :class="{ 'input-warning': formSubmitted && !furnitureData.dimensions.length }" @focus="resetWarning" />
         </div>
       </fieldset>
     </form>
@@ -171,6 +195,11 @@ label {
       padding-bottom: 10px;
     }
   }
+}
+
+.input-warning {
+  border: 1px solid var(--color-text-warning);
+  background-color: var(--color-background-input-warning);
 }
 
 .no-border {

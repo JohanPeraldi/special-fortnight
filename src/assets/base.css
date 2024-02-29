@@ -15,6 +15,7 @@
   --color-background: var(--vt-c-white);
   --color-background-highlight: #00bd7e33;
   --color-background-warning: #a8460033;
+  --color-background-input-warning: #ff8c86dd;
 
   --color-border: #b0b6bd;
 
