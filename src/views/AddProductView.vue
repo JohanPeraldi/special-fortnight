@@ -3,12 +3,27 @@ import { ref, reactive, computed, watch } from 'vue'
 import TheButton from '@/components/TheButton.vue'
 import TheHeader from '@/components/TheHeader.vue'
 
-// A warning message is displayed if the form
-// is submitted without selecting a product type
-const warningMessage = ref('')
+// Track the specific type of warning to display
+const warningType = ref('')
 
-// Track whether the Save button has been clicked
-const formSubmitted = ref(false)
+// Check that input fields are not left empty
+const validateInputFields = () => {
+  const allFieldsFilled = Object.values(productData.value).every(field => field !== '')
+  warningType.value = allFieldsFilled ? '' : 'emptyFields'
+
+  if (!allFieldsFilled) {
+    return false
+  }
+
+  return true
+}
+
+// Check that product type is selected
+const validateProductType = () => {
+  warningType.value = selectedType.value ? '' : 'productType'
+
+  return selectedType.value
+}
 
 // Data properties common to all product types
 let commonData = reactive({ sku: '', name: '', price: 0 })
@@ -21,9 +36,10 @@ let furnitureData = reactive({ dimensions: { height: 0, width: 0, length: 0 } })
 // The selected product type (dvd, book or furniture)
 let selectedType = ref('')
 
-// A watcher that removes the warning message when a product type is selected
+// A watcher that resets the warningType to an empty string when a product type is selected
 watch(selectedType, () => {
-  warningMessage.value = ''
+  // warningType.value = ''
+  resetWarning()
 })
 
 // A computed property that returns the selected product type data
@@ -55,27 +71,12 @@ const resetForm = () => {
 }
 
 const resetWarning = () => {
-  warningMessage.value = ''
-  formSubmitted.value = false
+  warningType.value = ''
 }
 
 const submitForm = () => {
-  formSubmitted.value = true
-
-  // Check if all fields have been filled out
-  const allFieldsFilled = Object.values(productData.value).every(field => field !== '')
-
-  if (!allFieldsFilled) {
-    warningMessage.value = 'Please fill out all fields!'
-
-    return
-  }
-
-  // Check if a product type has been selected
-  if (!selectedType.value) {
-    warningMessage.value = productData.value.message
-
-    return
+  if (!validateProductType() || !validateInputFields()) {
+    return // Prevent form submission
   }
 
   console.log('Product data:', productData.value)
@@ -99,19 +100,19 @@ const submitForm = () => {
     <form id="product_form" @submit.prevent="submitForm">
       <fieldset class="input-group no-border">
         <label for="sku">SKU</label>
-        <input type="text" id="sku" name="sku" autocomplete="off" v-model="commonData.sku" :class="{ 'input-warning': formSubmitted && !commonData.sku }" @focus="resetWarning" />
+        <input type="text" id="sku" name="sku" autocomplete="off" v-model="commonData.sku" v-bind:class="{ 'input-warning': warningType === 'emptyFields' }" @focus="resetWarning" />
       </fieldset>
       <fieldset class="input-group no-border">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" autocomplete="off" v-model="commonData.name" :class="{ 'input-warning': formSubmitted && !commonData.name }" @focus="resetWarning" />
+        <input type="text" id="name" name="name" autocomplete="off" v-model="commonData.name" v-bind:class="{ 'input-warning': warningType === 'emptyFields' }" @focus="resetWarning" />
       </fieldset>
       <fieldset class="input-group no-border">
         <label for="price">Price ($)</label>
-        <input type="number" id="price" name="price" min="0" value="0" step="0.01" autocomplete="off" v-model="commonData.price" :class="{ 'input-warning': formSubmitted && !commonData.price }" @focus="resetWarning" />
+        <input type="number" id="price" name="price" min="0" value="0" step="0.01" autocomplete="off" v-model="commonData.price" v-bind:class="{ 'input-warning': warningType === 'emptyFields' }" @focus="resetWarning" />
       </fieldset>
       <fieldset class="input-group no-border">
         <label for="productType">Type Switcher</label>
-        <select id="productType" name="productType" v-model="selectedType">
+        <select id="productType" name="productType" v-model="selectedType" v-bind:class="{ 'input-warning': warningType === 'productType' }">
           <option value="">Type Switcher</option>
           <option value="dvd">DVD</option>
           <option value="book">Book</option>
@@ -122,32 +123,33 @@ const submitForm = () => {
       <fieldset class="input-group" id="dvd" v-if="selectedType === 'dvd'">
         <legend>Please provide size in MB</legend>
         <label for="size">Size (MB)</label>
-        <input type="number" id="size" name="size" min="0" value="0" step="0.01" autocomplete="off" v-model="dvdData.size" :class="{ 'input-warning': formSubmitted && !dvdData.size }" @focus="resetWarning" />
+        <input type="number" id="size" name="size" min="0" value="0" step="0.01" autocomplete="off" v-model="dvdData.size" v-bind:class="{ 'input-warning': warningType === 'emptyFields' }" @focus="resetWarning" />
       </fieldset>
       <!-- The input below shows if option Book is selected -->
       <fieldset class="input-group" id="book" v-if="selectedType === 'book'">
         <legend>Please provide weight in Kgs</legend>
         <label for="weight">Weight (KG)</label>
-        <input type="number" id="weight" name="weight" min="0" value="0" step="0.001" autocomplete="off" v-model="bookData.weight" :class="{ 'input-warning': formSubmitted && !bookData.weight }" @focus="resetWarning" />
+        <input type="number" id="weight" name="weight" min="0" value="0" step="0.001" autocomplete="off" v-model="bookData.weight" v-bind:class="{ 'input-warning': warningType === 'emptyFields' }" @focus="resetWarning" />
       </fieldset>
       <!-- The inputs below show if option Furniture is selected -->
       <fieldset class="input-group column" id="furniture" v-if="selectedType === 'furniture'">
         <legend>Please provide dimensions in HxWxL format</legend>
         <div class="input-group inner">
           <label for="height">Height (CM)</label>
-          <input type="number" id="height" name="height" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.height" :class="{ 'input-warning': formSubmitted && !furnitureData.dimensions.height }" @focus="resetWarning" />
+          <input type="number" id="height" name="height" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.height" v-bind:class="{ 'input-warning': warningType === 'emptyFields' }" @focus="resetWarning" />
         </div>
         <div class="input-group inner">
           <label for="width">Width (CM)</label>
-          <input type="number" id="width" name="width" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.width" :class="{ 'input-warning': formSubmitted && !furnitureData.dimensions.width }" @focus="resetWarning" />
+          <input type="number" id="width" name="width" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.width" v-bind:class="{ 'input-warning': warningType === 'emptyFields' }" @focus="resetWarning" />
         </div>
         <div class="input-group inner">
           <label for="length">Length (CM)</label>
-          <input type="number" id="length" name="length" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.length" :class="{ 'input-warning': formSubmitted && !furnitureData.dimensions.length }" @focus="resetWarning" />
+          <input type="number" id="length" name="length" min="0" value="0" autocomplete="off" v-model="furnitureData.dimensions.length" v-bind:class="{ 'input-warning': warningType === 'emptyFields' }" @focus="resetWarning" />
         </div>
       </fieldset>
     </form>
-    <p class="warning">{{ warningMessage }}</p>
+    <p class="warning" v-if="warningType === 'productType'">Please select a product type!</p>
+    <p class="warning" v-if="warningType === 'emptyFields'">Please fill out all fields!</p>
   </div>
 </template>
 
