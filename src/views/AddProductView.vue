@@ -1,7 +1,12 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import TheButton from '@/components/TheButton.vue'
 import TheHeader from '@/components/TheHeader.vue'
+import { useProductsStore } from '@/stores/ProductsStore'
+
+const productsStore = useProductsStore()
+const router = useRouter()
 
 // Track the specific type of warning to display
 const warningType = ref('')
@@ -80,7 +85,9 @@ const submitForm = () => {
   }
 
   console.log('Product data:', productData.value)
+  productsStore.addProduct(productData.value)
   resetForm()
+  router.push('/')
 }
 </script>
 
