@@ -23,6 +23,12 @@ const validateInputFields = () => {
   return true
 }
 
+// Check that the SKU is unique
+const skuExists = async (sku) => {
+  await productsStore.getProducts()
+  return productsStore.products.some(product => product.sku === sku)
+}
+
 // Check that product type is selected
 const validateProductType = () => {
   warningType.value = selectedType.value ? '' : 'productType'
@@ -79,9 +85,15 @@ const resetWarning = () => {
   warningType.value = ''
 }
 
-const submitForm = () => {
+const submitForm = async () => {
   if (!validateProductType() || !validateInputFields()) {
     return // Prevent form submission
+  }
+
+  const exists = await skuExists(commonData.sku)
+  if (exists) {
+    warningType.value = 'skuExists'
+    return
   }
 
   productsStore.addProduct(productData.value)
@@ -156,6 +168,7 @@ const submitForm = () => {
     </form>
     <p class="warning" v-if="warningType === 'productType'">Please select a product type!</p>
     <p class="warning" v-if="warningType === 'emptyFields'">Please fill out all fields!</p>
+    <p class="warning" v-if="warningType === 'skuExists'">SKU already exists! Please enter a unique SKU.</p>
   </div>
 </template>
 
