@@ -5,6 +5,7 @@ import TheButton from '@/components/TheButton.vue'
 import { useProductsStore } from '@/stores/ProductsStore'
 
 const productsStore = useProductsStore()
+productsStore.getProducts()
 
 const deleteProducts = () => {
   // TODO: Handle deletion of selected products
