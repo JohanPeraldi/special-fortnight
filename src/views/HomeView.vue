@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import ProductCard from '@/components/ProductCard.vue'
 import TheHeader from '@/components/TheHeader.vue'
@@ -21,6 +21,10 @@ const deleteProducts = () => {
   selectedProducts.value = []
 }
 
+const sortedProducts = computed(() => {
+  return [...productsStore.products].sort((a, b) => a.sku.localeCompare(b.sku))
+})
+
 productsStore.getProducts()
 </script>
 
@@ -41,7 +45,7 @@ productsStore.getProducts()
       <p v-if="productsStore.loading">Loading products...</p>
       <p v-else-if="productsStore.products.length === 0">There are currently no products to display.</p>
       <div class="cards-layout" v-else>
-        <ProductCard v-for="product in productsStore.products" :key="product.sku" :product="product" @update:selectedProducts="updateSelectedProducts" />
+        <ProductCard v-for="product in sortedProducts" :key="product.sku" :product="product" @update:selectedProducts="updateSelectedProducts" />
       </div>
     </slot>
   </main>
