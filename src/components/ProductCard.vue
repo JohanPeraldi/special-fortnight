@@ -1,10 +1,19 @@
 <script setup>
+import { ref, watch } from 'vue'
+
 const props = defineProps(['product'])
+const emit = defineEmits(['update:selectedProducts'])
+
+const checked = ref(false)
+
+watch(checked, (newValue) => {
+  emit('update:selectedProducts', { sku: props.product.sku, checked: newValue })
+})
 </script>
 
 <template>
   <div class="item__container" :product="product">
-    <input type="checkbox" class="delete-checkbox" name="delete-checkbox" :id="'delete-checkbox-' + product.sku">
+    <input type="checkbox" class="delete-checkbox" name="delete-checkbox" :id="'delete-checkbox-' + product.sku" v-model="checked">
     <div class="item__details">
       <p>{{ product.sku }}</p>
       <p>{{ product.name }}</p>

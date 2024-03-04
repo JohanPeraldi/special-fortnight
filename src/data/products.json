@@ -4,37 +4,43 @@
       "sku": "dvd001",
       "name": "Rocky",
       "price": 0.99,
-      "size": 450
+      "size": 450,
+      "id": "f8b6"
     },
     {
       "sku": "dvd002",
       "name": "Terminator",
       "price": 0.99,
-      "size": 480
+      "size": 480,
+      "id": "5dfa"
     },
     {
       "sku": "dvd003",
       "name": "Rambo",
       "price": 0.99,
-      "size": 520
+      "size": 520,
+      "id": "0adf"
     },
     {
       "sku": "book001",
       "name": "The Great Gatsby",
       "price": 4.79,
-      "weight": 0.122
+      "weight": 0.122,
+      "id": "e6e2"
     },
     {
       "sku": "book002",
       "name": "To Kill a Mockingbird",
       "price": 6.89,
-      "weight": 0.155
+      "weight": 0.155,
+      "id": "26ab"
     },
     {
       "sku": "book003",
       "name": "1984",
       "price": 5.99,
-      "weight": 0.2
+      "weight": 0.2,
+      "id": "8e17"
     },
     {
       "sku": "furn001",
@@ -42,7 +48,8 @@
       "price": 1499.9,
       "height": 80,
       "width": 180,
-      "length": 220
+      "length": 220,
+      "id": "fdb4"
     },
     {
       "sku": "furn002",
@@ -50,7 +57,8 @@
       "price": 149.9,
       "height": 135,
       "width": 55,
-      "length": 45
+      "length": 45,
+      "id": "6939"
     },
     {
       "sku": "furn003",
@@ -58,7 +66,8 @@
       "price": 749.9,
       "height": 110,
       "width": 70,
-      "length": 150
+      "length": 150,
+      "id": "336a"
     }
   ]
 }

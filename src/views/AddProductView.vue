@@ -84,7 +84,6 @@ const submitForm = () => {
     return // Prevent form submission
   }
 
-  console.log('Product data:', productData.value)
   productsStore.addProduct(productData.value)
   resetForm()
   router.push('/')

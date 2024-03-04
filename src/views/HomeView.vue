@@ -1,16 +1,27 @@
 <script setup>
+import { ref } from 'vue'
+
 import ProductCard from '@/components/ProductCard.vue'
 import TheHeader from '@/components/TheHeader.vue'
 import TheButton from '@/components/TheButton.vue'
 import { useProductsStore } from '@/stores/ProductsStore'
 
 const productsStore = useProductsStore()
-productsStore.getProducts()
+const selectedProducts = ref([])
+const updateSelectedProducts = ({ sku, checked }) => {
+  if (checked) {
+    selectedProducts.value.push(sku)
+  } else {
+    selectedProducts.value = selectedProducts.value.filter(s => s !== sku)
+  }
+}
 
 const deleteProducts = () => {
-  // TODO: Handle deletion of selected products
-  console.log('Delete selected products')
+  productsStore.deleteProducts(selectedProducts.value)
+  selectedProducts.value = []
 }
+
+productsStore.getProducts()
 </script>
 
 <template>
@@ -27,9 +38,10 @@ const deleteProducts = () => {
   </TheHeader>
   <main>
     <slot>
-      <p v-if="productsStore.products.length === 0">There are currently no products to display.</p>
+      <p v-if="productsStore.loading">Loading products...</p>
+      <p v-else-if="productsStore.products.length === 0">There are currently no products to display.</p>
       <div class="cards-layout" v-else>
-        <ProductCard v-for="product in productsStore.products" :key="product.sku" :product="product" />
+        <ProductCard v-for="product in productsStore.products" :key="product.sku" :product="product" @update:selectedProducts="updateSelectedProducts" />
       </div>
     </slot>
   </main>
