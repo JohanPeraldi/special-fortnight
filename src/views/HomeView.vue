@@ -12,7 +12,7 @@ const updateSelectedProducts = ({ sku, checked }) => {
   if (checked) {
     selectedProducts.value.push(sku)
   } else {
-    selectedProducts.value = selectedProducts.value.filter(s => s !== sku)
+    selectedProducts.value = selectedProducts.value.filter((s) => s !== sku)
   }
 }
 
@@ -30,22 +30,29 @@ productsStore.getProducts()
 
 <template>
   <TheHeader>
-    <template #heading>
-      Product List
-    </template>
+    <template #heading> Product List </template>
     <template #buttons>
       <div class="buttons">
         <TheButton type="add" @click="$router.push('/add-product')">Add Product</TheButton>
-        <TheButton type="delete" @click="deleteProducts" id="delete-product-btn">Mass Delete</TheButton>
+        <TheButton type="delete" @click="deleteProducts" id="delete-product-btn"
+          >Mass Delete</TheButton
+        >
       </div>
     </template>
   </TheHeader>
   <main>
     <slot>
       <p v-if="productsStore.loading">Loading products...</p>
-      <p v-else-if="productsStore.products.length === 0">There are currently no products to display.</p>
+      <p v-else-if="productsStore.products.length === 0">
+        There are currently no products to display.
+      </p>
       <div class="cards-layout" v-else>
-        <ProductCard v-for="product in sortedProducts" :key="product.sku" :product="product" @update:selectedProducts="updateSelectedProducts" />
+        <ProductCard
+          v-for="product in sortedProducts"
+          :key="product.sku"
+          :product="product"
+          @update:selectedProducts="updateSelectedProducts"
+        />
       </div>
     </slot>
   </main>

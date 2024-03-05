@@ -5,7 +5,7 @@ export const useProductsStore = defineStore('products', () => {
   const products = ref([])
   const loading = ref(false)
   const error = ref(null)
-  
+
   async function addProduct(product) {
     products.value.push(product)
 
@@ -24,10 +24,12 @@ export const useProductsStore = defineStore('products', () => {
 
   async function deleteProducts(skus) {
     // Find corresponding ids of products to delete
-    const idsToDelete = products.value.filter(product => skus.includes(product.sku)).map(product => product.id)
+    const idsToDelete = products.value
+      .filter((product) => skus.includes(product.sku))
+      .map((product) => product.id)
 
     // Iterate over each ID and send a DELETE request
-    const deletePromises = idsToDelete.map(id => 
+    const deletePromises = idsToDelete.map((id) =>
       fetch(`http://localhost:3000/products/${id}`, {
         method: 'DELETE'
       })

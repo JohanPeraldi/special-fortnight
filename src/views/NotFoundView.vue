@@ -5,9 +5,7 @@ import TheButton from '@/components/TheButton.vue'
 
 <template>
   <TheHeader>
-    <template #heading>
-      404 - Not Found
-    </template>
+    <template #heading> 404 - Not Found </template>
     <template #buttons>
       <div class="buttons">
         <TheButton type="add" @click="$router.push('/')">Return Home</TheButton>
