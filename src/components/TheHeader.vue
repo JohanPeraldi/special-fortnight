@@ -16,4 +16,11 @@
   border-bottom: 1px solid var(--color-border);
   margin-bottom: 10px;
 }
+
+/* Place the buttons under the title on mobile phones */
+@media (max-width: 500px) {
+  .header {
+    flex-direction: column;
+  }
+}
 </style>

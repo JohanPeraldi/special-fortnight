@@ -340,4 +340,15 @@ label {
   color: var(--color-text-warning);
   margin: 1rem;
 }
+
+/* Add a max-width on the form container on mobile phones */
+@media (max-width: 500px) {
+  .add-product {
+    max-width: 375px;
+  }
+
+  .input-group {
+    min-width: initial;
+  }
+  }
 </style>
