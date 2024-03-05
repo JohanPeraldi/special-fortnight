@@ -350,5 +350,5 @@ label {
   .input-group {
     min-width: initial;
   }
-  }
+}
 </style>
