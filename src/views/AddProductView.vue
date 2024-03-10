@@ -1,10 +1,12 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 import TheButton from '@/components/TheButton.vue'
 import TheHeader from '@/components/TheHeader.vue'
 import { useProductsStore } from '@/stores/ProductsStore'
 
+// const pathToFormHandler = '../../../backend/submit_product.php'
 const productsStore = useProductsStore()
 const router = useRouter()
 
@@ -98,9 +100,28 @@ const submitForm = async () => {
     return
   }
 
-  productsStore.addProduct(productData.value)
-  resetForm()
-  router.push('/')
+  try {
+    await axios
+      .post('http://localhost/scandiweb/backend/submit_product.php', productData.value, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then((response) => {
+        console.log(response.data)
+        // Handle success
+        productsStore.addProduct(productData.value)
+        resetForm()
+        router.push('/')
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+        // Handle error
+      })
+  } catch (error) {
+    console.error('Error:', error)
+    // Handle error
+  }
 }
 </script>
 
@@ -115,7 +136,7 @@ const submitForm = async () => {
     </template>
   </TheHeader>
   <div class="add-product">
-    <form id="product_form" @submit.prevent="submitForm">
+    <form action="{pathToFormHandler}" method="post" id="product_form" @submit.prevent="submitForm">
       <fieldset class="input-group no-border">
         <label for="sku">SKU</label>
         <input

@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import axios from 'axios'
 
 export const useProductsStore = defineStore('products', () => {
   const products = ref([])
@@ -10,12 +11,10 @@ export const useProductsStore = defineStore('products', () => {
     products.value.push(product)
 
     try {
-      await fetch('http://localhost:3000/products', {
-        method: 'POST',
+      await axios.post('http://localhost:3000/products', product, {
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(product)
+        }
       })
     } catch (err) {
       error.value = err
@@ -29,15 +28,13 @@ export const useProductsStore = defineStore('products', () => {
       .map((product) => product.id)
 
     // Iterate over each ID and send a DELETE request
-    const deletePromises = idsToDelete.map((id) =>
-      fetch(`http://localhost:3000/products/${id}`, {
-        method: 'DELETE'
-      })
-    )
+    const deletePromises = idsToDelete.map((id) => {
+      return axios.delete(`http://localhost:3000/products/${id}`, {})
+    })
 
     try {
       await Promise.all(deletePromises)
-      // After deletion, fetch the updated list of products
+      // After deletion, get the updated list of products
       getProducts()
     } catch (err) {
       error.value = err
@@ -48,13 +45,13 @@ export const useProductsStore = defineStore('products', () => {
     loading.value = true
     error.value = null
     try {
-      const res = await fetch('http://localhost:3000/products')
-      const data = await res.json()
-      products.value = data
+      const res = await axios.get('http://localhost/scandiweb/backend/fetch_products.php')
+      products.value = res.data
     } catch (err) {
       error.value = err
+    } finally {
+      loading.value = false
     }
-    loading.value = false
   }
 
   return {
