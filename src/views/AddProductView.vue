@@ -100,9 +100,19 @@ const submitForm = async () => {
     return
   }
 
+  console.log('Selected type: ', selectedType.value)
+
+  // Construct the payload, including the selected product type
+  const payload = {
+    ...productData.value,
+    productType: selectedType.value,
+  }
+
+  console.log('Payload: ', payload)
+
   try {
     await axios
-      .post('http://localhost/scandiweb/backend/submit_product.php', productData.value, {
+      .post('http://localhost/scandiweb/backend/Product/submit_product.php', payload, {
         headers: {
           'Content-Type': 'application/json'
         }

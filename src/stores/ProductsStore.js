@@ -11,7 +11,7 @@ export const useProductsStore = defineStore('products', () => {
     products.value.push(product)
 
     try {
-      await axios.post('http://localhost:3000/products', product, {
+      await axios.post('http://localhost/scandiweb/backend/Product/submit_product.php', product, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -45,7 +45,7 @@ export const useProductsStore = defineStore('products', () => {
     loading.value = true
     error.value = null
     try {
-      const res = await axios.get('http://localhost/scandiweb/backend/fetch_products.php')
+      const res = await axios.get('http://localhost/scandiweb/backend/Product/fetch_products.php')
       products.value = res.data
     } catch (err) {
       error.value = err
