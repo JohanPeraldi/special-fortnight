@@ -29,7 +29,7 @@ export const useProductsStore = defineStore('products', () => {
 
     // Iterate over each ID and send a DELETE request
     const deletePromises = idsToDelete.map((id) => {
-      return axios.delete(`http://localhost:3000/products/${id}`, {})
+      return axios.delete('http://localhost/scandiweb/backend/Product/delete_products.php', {})
     })
 
     try {

@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import axios from 'axios'
 
 import ProductCard from '@/components/ProductCard.vue'
 import TheHeader from '@/components/TheHeader.vue'
@@ -8,24 +9,48 @@ import { useProductsStore } from '@/stores/ProductsStore'
 
 const productsStore = useProductsStore()
 const selectedProducts = ref([])
-const updateSelectedProducts = ({ sku, checked }) => {
+
+const updateSelectedProducts = ({ id, checked }) => {
   if (checked) {
-    selectedProducts.value.push(sku)
+    selectedProducts.value.push(id)
+    console.log('From if - Selected products: ', selectedProducts.value)
   } else {
-    selectedProducts.value = selectedProducts.value.filter((s) => s !== sku)
+    selectedProducts.value = selectedProducts.value.filter((productId) => productId !== id)
+    console.log('From else - Selected products: ', selectedProducts.value)
   }
 }
 
-const deleteProducts = () => {
-  productsStore.deleteProducts(selectedProducts.value)
-  selectedProducts.value = []
+const deleteProducts = async () => {
+  try {
+    console.log('From deleteProducts - Selected products: ', selectedProducts.value)
+    const response = await axios.delete('http://localhost/scandiweb/backend/Product/delete_products.php', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        ids: selectedProducts.value,
+      },
+    })
+    if (response.status !== 200) {
+      throw new Error('Failed to delete products')
+    }
+    // If deletion from database was successful, delete products from store
+    productsStore.deleteProducts(selectedProducts.value)
+    selectedProducts.value = []
+    // Optionally, refresh the products list from the backend
+    productsStore.getProducts()
+  } catch (error) {
+    console.log('Error deleting products: ', error)
+  }
 }
 
 const sortedProducts = computed(() => {
   return [...productsStore.products].sort((a, b) => a.sku.localeCompare(b.sku))
 })
 
-productsStore.getProducts()
+onMounted(() => {
+  productsStore.getProducts()
+})
 </script>
 
 <template>

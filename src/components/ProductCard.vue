@@ -7,7 +7,7 @@ const emit = defineEmits(['update:selectedProducts'])
 const checked = ref(false)
 
 watch(checked, (newValue) => {
-  emit('update:selectedProducts', { sku: props.product.sku, checked: newValue })
+  emit('update:selectedProducts', { id: props.product.id, checked: newValue })
 })
 </script>
 
@@ -17,7 +17,7 @@ watch(checked, (newValue) => {
       type="checkbox"
       class="delete-checkbox"
       name="delete-checkbox"
-      :id="'delete-checkbox-' + product.sku"
+      :id="'delete-checkbox-' + product.id"
       v-model="checked"
     />
     <div class="item__details">
