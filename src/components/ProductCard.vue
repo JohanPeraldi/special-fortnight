@@ -24,10 +24,10 @@ watch(checked, (newValue) => {
       <p>{{ product.sku }}</p>
       <p>{{ product.name }}</p>
       <p>{{ product.price }} $</p>
-      <p v-if="product.size">{{ product.size }} MB</p>
-      <p v-if="product.weight">{{ product.weight }} KG</p>
-      <p v-if="product.height">
-        Dimensions: {{ product.height }}x{{ product.width }}x{{ product.length }}
+      <p v-if="product.dvd_size">{{ product.dvd_size }} MB</p>
+      <p v-if="product.book_weight">{{ product.book_weight }} KG</p>
+      <p v-if="product.furniture_height">
+        Dimensions: {{ product.furniture_height }}x{{ product.furniture_width }}x{{ product.furniture_length }}
       </p>
     </div>
   </div>
