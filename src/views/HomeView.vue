@@ -45,6 +45,12 @@ const deleteProducts = async () => {
 }
 
 const sortedProducts = computed(() => {
+  // Check if there's an error or if products are not loaded yet
+  if (productsStore.error || productsStore.loading || !productsStore.products) {
+    // Return an empty array or handle accordingly
+    return []
+  }
+  // Proceed with sorting if there's no error and products are loaded
   return [...productsStore.products].sort((a, b) => a.sku.localeCompare(b.sku))
 })
 
@@ -68,6 +74,7 @@ onMounted(() => {
   <main>
     <slot>
       <p v-if="productsStore.loading">Loading products...</p>
+      <p v-else-if="productsStore.error">{{ productsStore.error }}</p>
       <p v-else-if="productsStore.products.length === 0">
         There are currently no products to display.
       </p>

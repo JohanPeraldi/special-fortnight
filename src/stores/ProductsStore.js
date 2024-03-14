@@ -46,9 +46,19 @@ export const useProductsStore = defineStore('products', () => {
     error.value = null
     try {
       const res = await axios.get('http://localhost/scandiweb/backend/Product/fetch_products.php')
-      products.value = res.data
+      if (res.data && res.data.error) {
+        error.value = res.data.error
+      } else {
+        products.value = res.data
+      }
     } catch (err) {
-      error.value = err
+      if (err.message && err.message.includes("Network Error")) {
+        error.value = "We're having trouble connecting to our services. Please try again later."
+      } else if (err.response && err.response.data && err.response.data.error) {
+        error.value = "We're currently experiencing some technical difficulties accessing our data. Please try again later."
+      } else {
+        error.value = "An unexpected error occured. Please try again later."
+      }
     } finally {
       loading.value = false
     }
@@ -56,6 +66,8 @@ export const useProductsStore = defineStore('products', () => {
 
   return {
     products,
+    loading,
+    error,
     addProduct,
     deleteProducts,
     getProducts
