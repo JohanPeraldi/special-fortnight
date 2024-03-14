@@ -9,20 +9,18 @@ import { useProductsStore } from '@/stores/ProductsStore'
 
 const productsStore = useProductsStore()
 const selectedProducts = ref([])
+const deletionError = ref(null)
 
 const updateSelectedProducts = ({ id, checked }) => {
   if (checked) {
     selectedProducts.value.push(id)
-    console.log('From if - Selected products: ', selectedProducts.value)
   } else {
     selectedProducts.value = selectedProducts.value.filter((productId) => productId !== id)
-    console.log('From else - Selected products: ', selectedProducts.value)
   }
 }
 
 const deleteProducts = async () => {
   try {
-    console.log('From deleteProducts - Selected products: ', selectedProducts.value)
     const response = await axios.delete(
       'http://localhost/scandiweb/backend/Product/delete_products.php',
       {
@@ -42,8 +40,10 @@ const deleteProducts = async () => {
     selectedProducts.value = []
     // Optionally, refresh the products list from the backend
     productsStore.getProducts()
+    deletionError.value = null
   } catch (error) {
-    console.log('Error deleting products: ', error)
+    deletionError.value =
+      'An error occurred while attempting to delete one or several products. Please try again later.'
   }
 }
 
@@ -75,6 +75,7 @@ onMounted(() => {
     </template>
   </TheHeader>
   <main>
+    <p class="warning" v-if="deletionError">{{ deletionError }}</p>
     <slot>
       <p v-if="productsStore.loading">Loading products...</p>
       <p v-else-if="productsStore.error">{{ productsStore.error }}</p>

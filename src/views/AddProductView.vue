@@ -100,15 +100,11 @@ const submitForm = async () => {
     return
   }
 
-  console.log('Selected type: ', selectedType.value)
-
   // Construct the payload, including the selected product type
   const payload = {
     ...productData.value,
     productType: selectedType.value
   }
-
-  console.log('Payload: ', payload)
 
   try {
     await axios
@@ -117,8 +113,7 @@ const submitForm = async () => {
           'Content-Type': 'application/json'
         }
       })
-      .then((response) => {
-        console.log(response.data)
+      .then(() => {
         // Handle success
         productsStore.addProduct(productData.value)
         resetForm()
@@ -368,11 +363,6 @@ label {
 
 .no-border {
   border: none;
-}
-
-.warning {
-  color: var(--color-text-warning);
-  margin: 1rem;
 }
 
 /* Add a max-width on the form container on mobile phones */
