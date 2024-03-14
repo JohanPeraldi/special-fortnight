@@ -27,7 +27,9 @@ watch(checked, (newValue) => {
       <p v-if="product.dvd_size">{{ product.dvd_size }} MB</p>
       <p v-if="product.book_weight">{{ product.book_weight }} KG</p>
       <p v-if="product.furniture_height">
-        Dimensions: {{ product.furniture_height }}x{{ product.furniture_width }}x{{ product.furniture_length }}
+        Dimensions: {{ product.furniture_height }}x{{ product.furniture_width }}x{{
+          product.furniture_length
+        }}
       </p>
     </div>
   </div>

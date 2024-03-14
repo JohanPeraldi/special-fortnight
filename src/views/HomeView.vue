@@ -23,14 +23,17 @@ const updateSelectedProducts = ({ id, checked }) => {
 const deleteProducts = async () => {
   try {
     console.log('From deleteProducts - Selected products: ', selectedProducts.value)
-    const response = await axios.delete('http://localhost/scandiweb/backend/Product/delete_products.php', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        ids: selectedProducts.value,
-      },
-    })
+    const response = await axios.delete(
+      'http://localhost/scandiweb/backend/Product/delete_products.php',
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          ids: selectedProducts.value
+        }
+      }
+    )
     if (response.status !== 200) {
       throw new Error('Failed to delete products')
     }

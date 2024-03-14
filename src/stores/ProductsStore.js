@@ -28,8 +28,12 @@ export const useProductsStore = defineStore('products', () => {
       .map((product) => product.id)
 
     // Iterate over each ID and send a DELETE request
-    const deletePromises = idsToDelete.map((id) => {
-      return axios.delete('http://localhost/scandiweb/backend/Product/delete_products.php', {})
+    const deletePromises = idsToDelete.map((ids) => {
+      return axios.delete('http://localhost/scandiweb/backend/Product/delete_products.php', {
+        data: {
+          ids
+        }
+      })
     })
 
     try {
@@ -52,12 +56,13 @@ export const useProductsStore = defineStore('products', () => {
         products.value = res.data
       }
     } catch (err) {
-      if (err.message && err.message.includes("Network Error")) {
+      if (err.message && err.message.includes('Network Error')) {
         error.value = "We're having trouble connecting to our services. Please try again later."
       } else if (err.response && err.response.data && err.response.data.error) {
-        error.value = "We're currently experiencing some technical difficulties accessing our data. Please try again later."
+        error.value =
+          "We're currently experiencing some technical difficulties accessing our data. Please try again later."
       } else {
-        error.value = "An unexpected error occured. Please try again later."
+        error.value = 'An unexpected error occured. Please try again later.'
       }
     } finally {
       loading.value = false

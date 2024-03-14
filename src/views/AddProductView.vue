@@ -105,7 +105,7 @@ const submitForm = async () => {
   // Construct the payload, including the selected product type
   const payload = {
     ...productData.value,
-    productType: selectedType.value,
+    productType: selectedType.value
   }
 
   console.log('Payload: ', payload)
@@ -155,7 +155,10 @@ const submitForm = async () => {
           name="sku"
           autocomplete="off"
           v-model="commonData.sku"
-          v-bind:class="{ 'input-warning': warningType === 'emptyFields' && !commonData.sku }"
+          v-bind:class="{
+            'input-warning':
+              (warningType === 'emptyFields' && !commonData.sku) || warningType === 'skuExists'
+          }"
           @focus="resetWarning"
         />
       </fieldset>
