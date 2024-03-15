@@ -7,6 +7,7 @@ import TheHeader from '@/components/TheHeader.vue'
 import TheButton from '@/components/TheButton.vue'
 import { useProductsStore } from '@/stores/ProductsStore'
 
+const apiEndpoint = import.meta.env.VITE_API_ENDPOINT
 const productsStore = useProductsStore()
 const selectedProducts = ref([])
 const deletionError = ref(null)
@@ -22,7 +23,7 @@ const updateSelectedProducts = ({ id, checked }) => {
 const deleteProducts = async () => {
   try {
     const response = await axios.delete(
-      'http://localhost/scandiweb/backend/Product/delete_products.php',
+      `${apiEndpoint}/delete_products.php`,
       {
         headers: {
           'Content-Type': 'application/json'

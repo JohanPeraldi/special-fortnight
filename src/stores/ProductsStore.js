@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 export const useProductsStore = defineStore('products', () => {
+  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT
   const products = ref([])
   const loading = ref(false)
   const error = ref(null)
@@ -11,7 +12,7 @@ export const useProductsStore = defineStore('products', () => {
     products.value.push(product)
 
     try {
-      await axios.post('http://localhost/scandiweb/backend/Product/submit_product.php', product, {
+      await axios.post(`${apiEndpoint}/submit_product.php`, product, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -29,7 +30,7 @@ export const useProductsStore = defineStore('products', () => {
 
     // Iterate over each ID and send a DELETE request
     const deletePromises = idsToDelete.map((ids) => {
-      return axios.delete('http://localhost/scandiweb/backend/Product/delete_products.php', {
+      return axios.delete(`${apiEndpoint}/delete_products.php`, {
         data: {
           ids
         }
@@ -49,7 +50,7 @@ export const useProductsStore = defineStore('products', () => {
     loading.value = true
     error.value = null
     try {
-      const res = await axios.get('http://localhost/scandiweb/backend/Product/fetch_products.php')
+      const res = await axios.get(`${apiEndpoint}/fetch_products.php`)
       if (res.data && res.data.error) {
         error.value = res.data.error
       } else {

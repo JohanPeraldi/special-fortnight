@@ -6,6 +6,8 @@ import TheButton from '@/components/TheButton.vue'
 import TheHeader from '@/components/TheHeader.vue'
 import { useProductsStore } from '@/stores/ProductsStore'
 
+const apiEndpoint = import.meta.env.VITE_API_ENDPOINT
+
 // const pathToFormHandler = '../../../backend/submit_product.php'
 const productsStore = useProductsStore()
 const router = useRouter()
@@ -108,7 +110,7 @@ const submitForm = async () => {
 
   try {
     await axios
-      .post('http://localhost/scandiweb/backend/Product/submit_product.php', payload, {
+      .post(`${apiEndpoint}/submit_product.php`, payload, {
         headers: {
           'Content-Type': 'application/json'
         }
