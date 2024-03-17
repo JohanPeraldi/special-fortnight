@@ -1,10 +1,14 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 import TheButton from '@/components/TheButton.vue'
 import TheHeader from '@/components/TheHeader.vue'
 import { useProductsStore } from '@/stores/ProductsStore'
 
+const apiEndpoint = import.meta.env.VITE_API_ENDPOINT
+
+// const pathToFormHandler = '../../../backend/submit_product.php'
 const productsStore = useProductsStore()
 const router = useRouter()
 
@@ -98,9 +102,33 @@ const submitForm = async () => {
     return
   }
 
-  productsStore.addProduct(productData.value)
-  resetForm()
-  router.push('/')
+  // Construct the payload, including the selected product type
+  const payload = {
+    ...productData.value,
+    productType: selectedType.value
+  }
+
+  try {
+    await axios
+      .post(`${apiEndpoint}/submit_product.php`, payload, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(() => {
+        // Handle success
+        productsStore.addProduct(productData.value)
+        resetForm()
+        router.push('/')
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+        // Handle error
+      })
+  } catch (error) {
+    console.error('Error:', error)
+    // Handle error
+  }
 }
 </script>
 
@@ -115,7 +143,7 @@ const submitForm = async () => {
     </template>
   </TheHeader>
   <div class="add-product">
-    <form id="product_form" @submit.prevent="submitForm">
+    <form action="{pathToFormHandler}" method="post" id="product_form" @submit.prevent="submitForm">
       <fieldset class="input-group no-border">
         <label for="sku">SKU</label>
         <input
@@ -124,7 +152,10 @@ const submitForm = async () => {
           name="sku"
           autocomplete="off"
           v-model="commonData.sku"
-          v-bind:class="{ 'input-warning': warningType === 'emptyFields' && !commonData.sku }"
+          v-bind:class="{
+            'input-warning':
+              (warningType === 'emptyFields' && !commonData.sku) || warningType === 'skuExists'
+          }"
           @focus="resetWarning"
         />
       </fieldset>
@@ -334,11 +365,6 @@ label {
 
 .no-border {
   border: none;
-}
-
-.warning {
-  color: var(--color-text-warning);
-  margin: 1rem;
 }
 
 /* Add a max-width on the form container on mobile phones */

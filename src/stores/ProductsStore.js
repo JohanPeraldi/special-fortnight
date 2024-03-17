@@ -1,23 +1,21 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import axios from 'axios'
 
 export const useProductsStore = defineStore('products', () => {
+  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT
   const products = ref([])
   const loading = ref(false)
   const error = ref(null)
-  // Replace url with api endpoint
-  const url = 'https://bewidnacs.42web.io/products'
 
   async function addProduct(product) {
     products.value.push(product)
 
     try {
-      await fetch(url, {
-        method: 'POST',
+      await axios.post(`${apiEndpoint}/submit_product.php`, product, {
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(product)
+        }
       })
     } catch (err) {
       error.value = err
@@ -31,15 +29,17 @@ export const useProductsStore = defineStore('products', () => {
       .map((product) => product.id)
 
     // Iterate over each ID and send a DELETE request
-    const deletePromises = idsToDelete.map((id) =>
-      fetch(`${url}/${id}`, {
-        method: 'DELETE'
+    const deletePromises = idsToDelete.map((ids) => {
+      return axios.delete(`${apiEndpoint}/delete_products.php`, {
+        data: {
+          ids
+        }
       })
-    )
+    })
 
     try {
       await Promise.all(deletePromises)
-      // After deletion, fetch the updated list of products
+      // After deletion, get the updated list of products
       getProducts()
     } catch (err) {
       error.value = err
@@ -50,17 +50,30 @@ export const useProductsStore = defineStore('products', () => {
     loading.value = true
     error.value = null
     try {
-      const res = await fetch(url)
-      const data = await res.json()
-      products.value = data
+      const res = await axios.get(`${apiEndpoint}/fetch_products.php`)
+      if (res.data && res.data.error) {
+        error.value = res.data.error
+      } else {
+        products.value = res.data
+      }
     } catch (err) {
-      error.value = err
+      if (err.message && err.message.includes('Network Error')) {
+        error.value = "We're having trouble connecting to our services. Please try again later."
+      } else if (err.response && err.response.data && err.response.data.error) {
+        error.value =
+          "We're currently experiencing some technical difficulties accessing our data. Please try again later."
+      } else {
+        error.value = 'An unexpected error occured. Please try again later.'
+      }
+    } finally {
+      loading.value = false
     }
-    loading.value = false
   }
 
   return {
     products,
+    loading,
+    error,
     addProduct,
     deleteProducts,
     getProducts
