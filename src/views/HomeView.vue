@@ -22,17 +22,14 @@ const updateSelectedProducts = ({ id, checked }) => {
 
 const deleteProducts = async () => {
   try {
-    const response = await axios.delete(
-      `${apiEndpoint}/delete_products.php`,
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        data: {
-          ids: selectedProducts.value
-        }
+    const response = await axios.delete(`${apiEndpoint}/delete_products.php`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        ids: selectedProducts.value
       }
-    )
+    })
     if (response.status !== 200) {
       throw new Error('Failed to delete products')
     }
