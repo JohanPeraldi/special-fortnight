@@ -65,9 +65,9 @@ onMounted(() => {
     <template #heading> Product List </template>
     <template #buttons>
       <div class="buttons">
-        <TheButton type="add" @click="$router.push('/add-product')">Add Product</TheButton>
+        <TheButton type="add" @click="$router.push('/add-product')">ADD</TheButton>
         <TheButton type="delete" @click="deleteProducts" id="delete-product-btn"
-          >Mass Delete</TheButton
+          >MASS DELETE</TheButton
         >
       </div>
     </template>
